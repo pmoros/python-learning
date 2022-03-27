@@ -1,0 +1,6 @@
+{
+    "python.defaultInterpreterPath": "C:\\Users\\pmoro\\dev\\working\\DevopsPractice\\python-learning\\venv\\Scripts\\python",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "python.formatting.provider": "black"
+}
