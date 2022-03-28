@@ -1,4 +1,7 @@
-from multiprocessing.sharedctypes import Value
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+
 from unittest import TestCase, main
 
 from python_learning.member import Member, Gender

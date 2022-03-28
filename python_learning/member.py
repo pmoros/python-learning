@@ -1,3 +1,13 @@
+"""
+    Defines Member class and it's dependencies.
+
+    Typical usage example:
+
+    member_gender = Gender.male
+    some_member = Member(1, "member_name", member_gender)    
+    # Manipulate the member    
+    
+"""
 from enum import Enum
 
 
@@ -43,6 +53,7 @@ class Member:
             self.father = father
 
     def set_spouse(self, spouse):
+        """Handles the necessary rules so a spouse can be assigned."""
         if not isinstance(spouse, Member):
             raise TypeError("Invalid value for spouse")
         elif spouse.gender == self.gender:
@@ -53,6 +64,7 @@ class Member:
             self.spouse = spouse
 
     def add_child(self, child):
+        """Handles the necessary rules to assign a child to a member."""
         if not isinstance(child, Member):
             raise TypeError("Invalid value for child")
         if (self.gender == Gender.female) and self.spouse is not None:
