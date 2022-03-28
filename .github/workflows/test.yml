@@ -1,0 +1,35 @@
+name: Python test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+  
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        if: steps.check.outcome == 'failure'
+        with:
+          run: |
+            apt-get-install
+            pip-upgrade
+            pip install wheel
+            pip install -r requirements/testing.txt
+      - name: Python unit tests
+        run: |
+          python -m unittest discover -s "tests/unit/" -p "test_*.py"
