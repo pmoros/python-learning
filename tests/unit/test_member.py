@@ -48,4 +48,29 @@ class TestMember(TestCase):
         self.assertEqual(self.member.father.name, "Dad")
         self.assertEqual(self.member.father.gender, Gender.male)
 
-    # TODO: Edge case for gender
+    def test_set_spouse(self):
+        spouse_demo_a = "SpouseA"
+        spouse_demo_b = Member(4, "MaleB", Gender.male)
+        spouse_demo_c = Member(5, "WomanC", Gender.female)
+
+        # Error case
+        self.assertRaises(TypeError, self.member.set_spouse, spouse_demo_a)
+        self.assertRaises(ValueError, self.member.set_spouse, spouse_demo_b)
+
+        # Success case
+        self.member.set_spouse(spouse_demo_c)
+        self.assertNotEqual(self.member.spouse.gender, self.member.gender)
+
+    def test_add_child(self):
+        child_demo_a = "ChildA"
+        child_demo_b = Member(6, "ChildB", Gender.male)
+
+        # Error case
+        self.assertRaises(TypeError, self.member.add_child, child_demo_a)
+        self.assertRaises(AttributeError, self.member.add_child, child_demo_b)
+
+        # Success case
+        member_female = Member(7, "FemaleAux", Gender.female)
+        member_female.set_spouse(self.member)
+        member_female.add_child(child_demo_b)
+        self.assertEqual(member_female.children.pop(), child_demo_b)
