@@ -1,5 +1,6 @@
 from multiprocessing.sharedctypes import Value
-from unittest import TestCase
+from unittest import TestCase, main
+
 from python_learning.member import Member, Gender
 
 
@@ -74,3 +75,7 @@ class TestMember(TestCase):
         member_female.set_spouse(self.member)
         member_female.add_child(child_demo_b)
         self.assertEqual(member_female.children.pop(), child_demo_b)
+
+
+if __name__ == "__main__":
+    main()
