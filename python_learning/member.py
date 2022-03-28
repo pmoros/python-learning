@@ -1,22 +1,30 @@
 """
-    Defines Member class and it's dependencies.
+Defines Member class and it's dependencies.
+Typical usage example:
 
-    Typical usage example:
-
-    member_gender = Gender.male
-    some_member = Member(1, "member_name", member_gender)    
-    # Manipulate the member    
-    
+member_gender = Gender.male
+some_member = Member(1, "member_name", member_gender)    
+# Manipulate the member    
 """
 from enum import Enum
 
 
 class Gender(Enum):
-    male = "Male"
-    female = "Female"
+
+    MALE = "Male"
+    FEMALE = ".FEMALE"
 
 
 class Member:
+    """
+    Defines a Member.
+
+    Args:
+    id: unique identifier to a member (int)
+    name: str
+    gender: Gender
+    """
+
     def __init__(self, id, name, gender):
         self.id = id
         self.name = name
@@ -29,45 +37,49 @@ class Member:
     def __set_gender(self, gender):
         if not isinstance(gender, Gender):
             raise TypeError("Non valid value for gender")
-        else:
-            self.gender = gender
+
+        self.gender = gender
 
     def set_mother(self, mother):
         if not isinstance(mother, Member):
             raise TypeError("Invalid value for mother")
-        elif mother.gender != Gender.female:
+
+        if mother.gender != Gender.FEMALE:
             raise ValueError(
-                "Invalid gender value for mother" "Mother should be female"
+                "Invalid gender value for mother" "Mother should be .FEMALE"
             )
-        else:
-            self.mother = mother
+
+        self.mother = mother
 
     def set_father(self, father):
         if not isinstance(father, Member):
             raise TypeError("Invalid value for father")
-        elif father.gender != Gender.male:
+
+        if father.gender != Gender.MALE:
             raise ValueError(
                 "Invalid gender value for father. " "Father should be male"
             )
-        else:
-            self.father = father
+
+        self.father = father
 
     def set_spouse(self, spouse):
         """Handles the necessary rules so a spouse can be assigned."""
         if not isinstance(spouse, Member):
             raise TypeError("Invalid value for spouse")
-        elif spouse.gender == self.gender:
+
+        if spouse.gender == self.gender:
             raise ValueError(
                 "Invalid spouse value. " "Spouse should be of the opposite genre"
             )
-        else:
-            self.spouse = spouse
+
+        self.spouse = spouse
 
     def add_child(self, child):
         """Handles the necessary rules to assign a child to a member."""
         if not isinstance(child, Member):
             raise TypeError("Invalid value for child")
-        if (self.gender == Gender.female) and self.spouse is not None:
-            self.children.append(child)
-        else:
+
+        if (self.gender != Gender.FEMALE) and self.spouse is None:
             raise AttributeError("It's not possible to add a child")
+        else:
+            self.children.append(child)

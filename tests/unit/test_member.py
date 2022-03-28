@@ -9,7 +9,7 @@ from python_learning.member import Member, Gender
 
 class TestMember(TestCase):
     def setUp(self):
-        self.member = Member(1, "Zim", Gender.male)
+        self.member = Member(1, "Zim", Gender.MALE)
 
     def test_initialization(self):
         # Check instance
@@ -18,7 +18,7 @@ class TestMember(TestCase):
         # Check properties
         self.assertEqual(self.member.id, 1)
         self.assertEqual(self.member.name, "Zim")
-        self.assertEqual(self.member.gender, Gender.male)
+        self.assertEqual(self.member.gender, Gender.MALE)
         self.assertEqual(self.member.mother, None)
         self.assertEqual(self.member.father, None)
         self.assertEqual(self.member.spouse, None)
@@ -26,8 +26,8 @@ class TestMember(TestCase):
 
     def test_set_mother(self):
         mother_demo_a = "mother_demo_a"  # Wrong type
-        mother_demo_b = Member(2, "MotherDemoB", Gender.male)  # Invalid sex
-        mother_demo_c = Member(3, "Mom", Gender.female)
+        mother_demo_b = Member(2, "MotherDemoB", Gender.MALE)  # Invalid sex
+        mother_demo_c = Member(3, "Mom", Gender.FEMALE)
 
         # Error case
         self.assertRaises(TypeError, self.member.set_mother, mother_demo_a)
@@ -36,12 +36,12 @@ class TestMember(TestCase):
         # Success case
         self.member.set_mother(mother_demo_c)
         self.assertEqual(self.member.mother.name, "Mom")
-        self.assertEqual(self.member.mother.gender, Gender.female)
+        self.assertEqual(self.member.mother.gender, Gender.FEMALE)
 
     def test_set_father(self):
         father_demo_a = "father_demo_a"  # Wrong type
-        father_demo_b = Member(2, "FatherDemoB", Gender.female)  # Invalid sex
-        father_demo_c = Member(3, "Dad", Gender.male)
+        father_demo_b = Member(2, "FatherDemoB", Gender.FEMALE)  # Invalid sex
+        father_demo_c = Member(3, "Dad", Gender.MALE)
 
         # Error case
         self.assertRaises(TypeError, self.member.set_father, father_demo_a)
@@ -50,12 +50,12 @@ class TestMember(TestCase):
         # Success case
         self.member.set_father(father_demo_c)
         self.assertEqual(self.member.father.name, "Dad")
-        self.assertEqual(self.member.father.gender, Gender.male)
+        self.assertEqual(self.member.father.gender, Gender.MALE)
 
     def test_set_spouse(self):
         spouse_demo_a = "SpouseA"
-        spouse_demo_b = Member(4, "MaleB", Gender.male)
-        spouse_demo_c = Member(5, "WomanC", Gender.female)
+        spouse_demo_b = Member(4, "MaleB", Gender.MALE)
+        spouse_demo_c = Member(5, "WomanC", Gender.FEMALE)
 
         # Error case
         self.assertRaises(TypeError, self.member.set_spouse, spouse_demo_a)
@@ -67,14 +67,14 @@ class TestMember(TestCase):
 
     def test_add_child(self):
         child_demo_a = "ChildA"
-        child_demo_b = Member(6, "ChildB", Gender.male)
+        child_demo_b = Member(6, "ChildB", Gender.MALE)
 
         # Error case
         self.assertRaises(TypeError, self.member.add_child, child_demo_a)
         self.assertRaises(AttributeError, self.member.add_child, child_demo_b)
 
         # Success case
-        member_female = Member(7, "FemaleAux", Gender.female)
+        member_female = Member(7, "FemaleAux", Gender.FEMALE)
         member_female.set_spouse(self.member)
         member_female.add_child(child_demo_b)
         self.assertEqual(member_female.children.pop(), child_demo_b)
