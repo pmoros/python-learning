@@ -2,17 +2,18 @@
 Defines Member class and it's dependencies.
 Typical usage example:
 
-member_gender = Gender.male
-some_member = Member(1, "member_name", member_gender)    
-# Manipulate the member    
+member_gender = Gender.MALE
+some_member = Member(1, "member_name", member_gender)
+# Manipulate the member
 """
 from enum import Enum
 
 
 class Gender(Enum):
+    """Defines allowed gender."""
 
-    MALE = "Male"
-    FEMALE = ".FEMALE"
+    MALE = "MALE"
+    FEMALE = "FEMALE"
 
 
 class Member:
@@ -81,5 +82,5 @@ class Member:
 
         if (self.gender != Gender.FEMALE) and self.spouse is None:
             raise AttributeError("It's not possible to add a child")
-        else:
-            self.children.append(child)
+
+        self.children.append(child)
