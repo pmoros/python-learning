@@ -20,8 +20,6 @@ class TestMember(TestCase):
         self.assertEqual(self.member.spouse, None)
         self.assertEqual(self.member.children, [])
 
-        # Edge case for gender
-
     def test_set_mother(self):
         mother_demo_a = "mother_demo_a"  # Wrong type
         mother_demo_b = Member(2, "MotherDemoB", Gender.male)  # Invalid sex
@@ -35,3 +33,19 @@ class TestMember(TestCase):
         self.member.set_mother(mother_demo_c)
         self.assertEqual(self.member.mother.name, "Mom")
         self.assertEqual(self.member.mother.gender, Gender.female)
+
+    def test_set_father(self):
+        father_demo_a = "father_demo_a"  # Wrong type
+        father_demo_b = Member(2, "FatherDemoB", Gender.female)  # Invalid sex
+        father_demo_c = Member(3, "Dad", Gender.male)
+
+        # Error case
+        self.assertRaises(TypeError, self.member.set_father, father_demo_a)
+        self.assertRaises(ValueError, self.member.set_father, father_demo_b)
+
+        # Success case
+        self.member.set_father(father_demo_c)
+        self.assertEqual(self.member.father.name, "Dad")
+        self.assertEqual(self.member.father.gender, Gender.male)
+
+    # TODO: Edge case for gender
