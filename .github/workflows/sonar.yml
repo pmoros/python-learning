@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-      types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened]
 name: Static Analysis Sonar
 jobs:
   build:
@@ -16,10 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: coverga
-          path: tmp/coverage.xml
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
@@ -28,29 +24,36 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r ./requirements/testing.txt
       - name: Test with unittest
-        run: |        
+        run: |
           python -m unittest discover -s ./tests  -p 'test_*.py'
-          coverage run --source python_learning -m unittest discover && coverage xml -io tmp/coverage.xml
+          coverage run --source python_learning -m unittest discover && coverage xml -i
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: coverage.xml
+          retention-days: 1
   sonarcloud:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-        fetch-depth: 0
-    - uses: actions/download-artifact@v2
-      with:
-        name: tmp/coverage.xml
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      with:
-        args: >
-          -Dsonar.python.coverage.reportPaths=./tmp/coverage.xml
-          -Dsonar.sources=python_learning/
-          -Dsonar.test.exclusions=tests/**
-          -Dsonar.tests=tests/
-          -Dsonar.verbose=true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: Download coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: code-coverage-report
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=python_learning/
+            -Dsonar.test.exclusions=tests/**
+            -Dsonar.tests=tests/
+            -Dsonar.verbose=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
