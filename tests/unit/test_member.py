@@ -265,6 +265,42 @@ class TestMember(TestCase):
         # Check that mock_get_paternal_grandmother was called instead
         mock_get_maternal_grandmother.assert_called_with()
 
+    @patch(
+        "python_learning.member.Member.get_maternal_grandmother",
+        side_effect=[
+            None,
+            create_fake_member(children=[]),
+            create_fake_member(children=[Member(1, "Mom", Gender.FEMALE)]),
+            create_fake_member(
+                children=[
+                    Member(1, "Mom", Gender.FEMALE),
+                    Member(2, "Aunt", Gender.FEMALE),
+                ],
+            ),
+            create_fake_member(
+                children=[
+                    Member(1, "Mom", Gender.FEMALE),
+                    Member(2, "Aunt", Gender.FEMALE),
+                    Member(3, "Uncle", Gender.MALE),
+                ],
+            ),
+        ],
+    )
+    def test_get_maternal_uncle(self, mock_get_maternal_grandmother):
+        self.assertEqual(isinstance(self.member.get_maternal_grandmother, Mock), True)
+
+        self.assertEqual(self.member.get_maternal_uncle(), [])
+        self.assertEqual(self.member.get_maternal_uncle(), [])
+        self.assertEqual(self.member.get_maternal_uncle(), [])
+        self.assertEqual(self.member.get_maternal_uncle(), [])
+
+        uncles = self.member.get_maternal_uncle()
+        uncle = uncles[0]
+        self.assertEqual(uncle.id, 3)
+
+        # Check that mock_get_paternal_grandmother was called instead
+        mock_get_maternal_grandmother.assert_called_with()
+
 
 if __name__ == "__main__":
     main()

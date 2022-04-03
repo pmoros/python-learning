@@ -150,3 +150,14 @@ class Member:
         aunts = list(filter(lambda x: x.id != self.mother.id, female_children))
 
         return aunts
+
+    def get_maternal_uncle(self):
+        uncles = []
+        maternal_grandmother = self.get_maternal_grandmother()
+        if not maternal_grandmother:
+            return []
+
+        grandmother_children = maternal_grandmother.children
+        uncles = list(filter(lambda x: x.gender == Gender.MALE, grandmother_children))
+
+        return uncles
