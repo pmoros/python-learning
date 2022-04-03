@@ -161,3 +161,48 @@ class Member:
         uncles = list(filter(lambda x: x.gender == Gender.MALE, grandmother_children))
 
         return uncles
+
+    def get_brother_in_law(self):
+        spouse_mother = self.get_spouse_mother()
+        if not spouse_mother:
+            return []
+
+        spouse_mother_children = spouse_mother.children
+        brothers_in_law = list(
+            filter(lambda x: x.gender == Gender.MALE, spouse_mother_children)
+        )
+        if self.spouse.gender == Gender.MALE:
+            brothers_in_law = filter(lambda x: x != self.spouse, brothers_in_law)
+
+        return brothers_in_law
+
+    def get_sister_in_law(self):
+        sisters_in_law = []
+        spouse_mother = self.get_spouse_mother()
+        if not spouse_mother:
+            return []
+
+        spouse_mother_children = spouse_mother.children
+        sisters_in_law = list(
+            filter(lambda x: x.gender == Gender.FEMALE, spouse_mother_children)
+        )
+        if self.spouse.gender == Gender.FEMALE:
+            sisters_in_law = list(
+                filter(lambda x: x.id != self.spouse.id, sisters_in_law)
+            )
+
+        return sisters_in_law
+
+    def get_son(self):
+        if not self.children:
+            return []
+
+        sons = list(filter(lambda x: x.gender == Gender.MALE, self.children))
+        return sons
+
+    def get_daugther(self):
+        if not self.children:
+            return []
+
+        daugther = list(filter(lambda x: x.gender == Gender.FEMALE, self.children))
+        return daugther       

@@ -301,6 +301,102 @@ class TestMember(TestCase):
         # Check that mock_get_paternal_grandmother was called instead
         mock_get_maternal_grandmother.assert_called_with()
 
+    @patch(
+        "python_learning.member.Member.get_spouse_mother",
+        side_effect=[
+            None,
+            None,
+            create_fake_member(children=[Member(1, "Spouse", Gender.FEMALE)]),
+            create_fake_member(
+                children=[
+                    Member(1, "Spouse", Gender.FEMALE),
+                    Member(2, "SisterInLaw", Gender.FEMALE),
+                ],
+            ),
+            create_fake_member(
+                children=[
+                    Member(1, "Spouse", Gender.FEMALE),
+                    Member(2, "SisterInLaw", Gender.FEMALE),
+                    Member(3, "BrotherInLaw", Gender.MALE),
+                ],
+            ),
+        ],
+    )
+    def test_get_brother_in_law(self, mock_get_spouse_mother):
+        self.member.spouse = Member(1, "Spouse", Gender.FEMALE)
+        self.assertEqual(isinstance(self.member.get_spouse_mother, Mock), True)
+
+        self.assertEqual(self.member.get_brother_in_law(), [])
+        self.assertEqual(self.member.get_brother_in_law(), [])
+        self.assertEqual(self.member.get_brother_in_law(), [])
+        self.assertEqual(self.member.get_brother_in_law(), [])
+
+        brothers_in_law = self.member.get_brother_in_law()
+        brother_in_law = brothers_in_law[0]
+        self.assertEqual(brother_in_law.id, 3)
+
+        # Check that mock_get_spouse_mother was called instead
+        mock_get_spouse_mother.assert_called_with()
+
+    @patch(
+        "python_learning.member.Member.get_spouse_mother",
+        side_effect=[
+            None,
+            create_fake_member(children=[Member(1, "Spouse", Gender.FEMALE)]),
+            create_fake_member(
+                children=[
+                    Member(1, "Spouse", Gender.FEMALE),
+                    Member(3, "BrotherInLaw", Gender.MALE),
+                ],
+            ),
+            create_fake_member(
+                children=[
+                    Member(1, "Spouse", Gender.FEMALE),
+                    Member(2, "SisterInLaw", Gender.FEMALE),
+                    Member(3, "BrotherInLaw", Gender.MALE),
+                ],
+            ),
+        ],
+    )
+    def test_get_sister_in_law(self, mock_get_spouse_mother):
+        self.member.spouse = Member(1, "Spouse", Gender.FEMALE)
+        self.assertEqual(isinstance(self.member.get_spouse_mother, Mock), True)
+
+        self.assertEqual(self.member.get_sister_in_law(), [])
+        self.assertEqual(self.member.get_sister_in_law(), [])
+        self.assertEqual(self.member.get_sister_in_law(), [])
+
+        sisters_in_law = self.member.get_sister_in_law()
+        sister_in_law = sisters_in_law[0]
+        self.assertEqual(sister_in_law.id, 2)
+
+        # Check that mock_get_spouse_mother was called instead
+        mock_get_spouse_mother.assert_called_with()
+
+    def test_get_son(self):
+        self.assertEqual(self.member.get_son(), [])
+
+        demo_daugther = Member(2, "Daugther", Gender.FEMALE)
+        self.member.children.append(demo_daugther)
+        self.assertEqual(self.member.get_son(), [])
+
+        demo_son = Member(3, "Son", Gender.MALE)
+        self.member.children.append(demo_son)
+        self.assertEqual(self.member.get_son(), [demo_son])
+
+        self.member.children = []
+
+    def test_get_daugther(self):
+        self.assertEqual(self.member.get_daugther(), [])
+
+        demo_son = Member(3, "Son", Gender.MALE)
+        self.member.children.append(demo_son)
+        self.assertEqual(self.member.get_daugther(), [])
+
+        demo_daugther = Member(2, "Daugther", Gender.FEMALE)
+        self.member.children.append(demo_daugther)
+        self.assertEqual(self.member.get_daugther(), [demo_daugther])
+
 
 if __name__ == "__main__":
     main()
