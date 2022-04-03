@@ -205,4 +205,11 @@ class Member:
             return []
 
         daugther = list(filter(lambda x: x.gender == Gender.FEMALE, self.children))
-        return daugther       
+        return daugther
+
+    def get_siblings(self):
+        if not self.mother or not self.mother.children:
+            return []
+
+        siblings = list(filter(lambda x: x != self, self.mother.children))
+        return siblings

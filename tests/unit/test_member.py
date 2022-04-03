@@ -34,7 +34,7 @@ class TestMember(TestCase):
     def setUp(self):
         self.member = Member(1, "Zim", Gender.MALE)
         self.member.father = Member(1, "Dad", Gender.MALE)
-        self.member.mother = Member(1, "Mom", Gender.MALE)
+        self.member.mother = Member(1, "Mom", Gender.FEMALE)
 
     def test_initialization(self):
         # Check instance
@@ -396,6 +396,23 @@ class TestMember(TestCase):
         demo_daugther = Member(2, "Daugther", Gender.FEMALE)
         self.member.children.append(demo_daugther)
         self.assertEqual(self.member.get_daugther(), [demo_daugther])
+
+    def test_get_siblings(self):
+        self.assertEqual(self.member.get_siblings(), [])
+
+        demo_mother = Member(1, "Mother", Gender.FEMALE)
+        self.member.mother = demo_mother
+        self.assertEqual(self.member.get_siblings(), [])
+
+        self.member.mother.children = [self.member]
+        self.assertEqual(self.member.get_siblings(), [])
+
+        demo_siblings = [
+            Member(3, "SiblingA", Gender.FEMALE),
+            Member(4, "SiblingB", Gender.MALE),
+        ]
+        self.member.mother.children.extend(demo_siblings)
+        self.assertEqual(self.member.get_siblings(), demo_siblings)
 
 
 if __name__ == "__main__":
