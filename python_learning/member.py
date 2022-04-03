@@ -108,3 +108,45 @@ class Member:
             return None
 
         return self.spouse.mother
+
+    def get_paternal_aunt(self):
+        aunts = []
+        paternal_grandmother = self.get_paternal_grandmother()
+        if not paternal_grandmother:
+            return []
+
+        grandmother_children = paternal_grandmother.children
+        aunts = list(filter(lambda x: x.gender == Gender.FEMALE, grandmother_children))
+
+        return aunts
+
+    def get_paternal_uncle(self):
+        uncles = []
+        paternal_grandmother = self.get_paternal_grandmother()
+        if not paternal_grandmother:
+            return []
+
+        grandmother_children = paternal_grandmother.children
+
+        male_children = list(
+            filter(lambda x: x.gender == Gender.MALE, grandmother_children)
+        )
+
+        uncles = list(filter(lambda x: x.id != self.father.id, male_children))
+
+        return uncles
+
+    def get_maternal_aunt(self):
+        aunts = []
+        maternal_grandmother = self.get_maternal_grandmother()
+        if not maternal_grandmother:
+            return []
+        grandmother_children = maternal_grandmother.children
+
+        female_children = list(
+            filter(lambda x: x.gender == Gender.FEMALE, grandmother_children)
+        )
+
+        aunts = list(filter(lambda x: x.id != self.mother.id, female_children))
+
+        return aunts

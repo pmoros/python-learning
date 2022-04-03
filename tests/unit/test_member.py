@@ -4,13 +4,37 @@
 
 from tkinter.filedialog import test
 from unittest import TestCase, main
+from unittest.mock import patch, Mock
 
 from python_learning.member import Member, Gender
+
+
+def create_fake_member(
+    id=None,
+    name=None,
+    gender=None,
+    mother=None,
+    father=None,
+    spouse=None,
+    children=None,
+):
+    member = Mock()
+    member.id = id
+    member.name = name
+    member.gender = gender
+    member.mother = mother
+    member.father = father
+    member.spouse = spouse
+    member.children = children
+
+    return member
 
 
 class TestMember(TestCase):
     def setUp(self):
         self.member = Member(1, "Zim", Gender.MALE)
+        self.member.father = Member(1, "Dad", Gender.MALE)
+        self.member.mother = Member(1, "Mom", Gender.MALE)
 
     def test_initialization(self):
         # Check instance
@@ -20,8 +44,6 @@ class TestMember(TestCase):
         self.assertEqual(self.member.id, 1)
         self.assertEqual(self.member.name, "Zim")
         self.assertEqual(self.member.gender, Gender.MALE)
-        self.assertEqual(self.member.mother, None)
-        self.assertEqual(self.member.father, None)
         self.assertEqual(self.member.spouse, None)
         self.assertEqual(self.member.children, [])
 
@@ -128,6 +150,120 @@ class TestMember(TestCase):
         # Success case
         test_member_spouse.mother = test_spouse_mother
         self.assertEqual(test_member.get_spouse_mother(), test_spouse_mother)
+
+    @patch(
+        "python_learning.member.Member.get_paternal_grandmother",
+        side_effect=[
+            None,
+            create_fake_member(children=[]),
+            create_fake_member(children=[Member(3, "Dad", Gender.MALE)]),
+            create_fake_member(
+                children=[
+                    Member(3, "Dad", Gender.MALE),
+                    Member(4, "Uncle", Gender.MALE),
+                ]
+            ),
+            create_fake_member(
+                children=[
+                    Member(3, "Dad", Gender.MALE),
+                    Member(4, "Uncle", Gender.MALE),
+                    Member(5, "Aunt", Gender.FEMALE),
+                ]
+            ),
+        ],
+    )
+    def test_get_paternal_aunt(self, mock_get_paternal_grandmother):
+        # Simulates the function call, but should get a mock
+        self.assertEqual(isinstance(self.member.get_paternal_grandmother, Mock), True)
+
+        # Check for None values
+        self.assertEqual(self.member.get_paternal_aunt(), [])
+        self.assertEqual(self.member.get_paternal_aunt(), [])
+        self.assertEqual(self.member.get_paternal_aunt(), [])
+        self.assertEqual(self.member.get_paternal_aunt(), [])
+
+        paternal_aunts = self.member.get_paternal_aunt()
+        self.assertEqual(len(paternal_aunts), 1)
+        self.assertEqual(paternal_aunts[0].id, 5)
+        self.assertEqual(paternal_aunts[0].gender, Gender.FEMALE)
+
+        # Check that mock_get_paternal_grandmother was called instead
+        mock_get_paternal_grandmother.assert_called_with()
+
+    # Return a fake grandmother
+    @patch(
+        "python_learning.member.Member.get_paternal_grandmother",
+        side_effect=[
+            None,
+            create_fake_member(children=[]),
+            create_fake_member(children=[Member(1, "Dad", Gender.MALE)]),
+            create_fake_member(
+                children=[
+                    Member(1, "Dad", Gender.MALE),
+                    Member(2, "Aunt", Gender.FEMALE),
+                ],
+            ),
+            create_fake_member(
+                children=[
+                    Member(1, "Dad", Gender.MALE),
+                    Member(2, "Aunt", Gender.FEMALE),
+                    Member(3, "Uncle", Gender.MALE),
+                ],
+            ),
+        ],
+    )
+    def test_get_paternal_uncle(self, mock_get_paternal_grandmother):
+        # Simulates the function call, but should get a mock
+        self.assertEqual(isinstance(self.member.get_paternal_grandmother, Mock), True)
+
+        self.assertEqual(self.member.get_paternal_uncle(), [])
+        self.assertEqual(self.member.get_paternal_uncle(), [])
+        self.assertEqual(self.member.get_paternal_uncle(), [])
+        self.assertEqual(self.member.get_paternal_uncle(), [])
+
+        uncles = self.member.get_paternal_uncle()
+        uncle = uncles[0]
+        self.assertEqual(uncle.id, 3)
+        self.assertEqual(uncle.gender, Gender.MALE)
+
+        # Check that mock_get_paternal_grandmother was called instead
+        mock_get_paternal_grandmother.assert_called_with()
+
+    @patch(
+        "python_learning.member.Member.get_maternal_grandmother",
+        side_effect=[
+            None,
+            create_fake_member(children=[]),
+            create_fake_member(children=[Member(1, "Mom", Gender.FEMALE)]),
+            create_fake_member(
+                children=[
+                    Member(1, "Mom", Gender.FEMALE),
+                    Member(3, "Uncle", Gender.MALE),
+                ],
+            ),
+            create_fake_member(
+                children=[
+                    Member(1, "Mom", Gender.MALE),
+                    Member(2, "Aunt", Gender.FEMALE),
+                    Member(3, "Uncle", Gender.MALE),
+                ],
+            ),
+        ],
+    )
+    def test_get_maternal_aunt(self, mock_get_maternal_grandmother):
+        self.assertEqual(isinstance(self.member.get_maternal_grandmother, Mock), True)
+
+        self.assertEqual(self.member.get_maternal_aunt(), [])
+        self.assertEqual(self.member.get_maternal_aunt(), [])
+        self.assertEqual(self.member.get_maternal_aunt(), [])
+        self.assertEqual(self.member.get_maternal_aunt(), [])
+
+        aunts = self.member.get_maternal_aunt()
+        aunt = aunts[0]
+        self.assertEqual(aunt.id, 2)
+
+        # Check that mock_get_paternal_grandmother was called instead
+        mock_get_maternal_grandmother.assert_called_with()
 
 
 if __name__ == "__main__":
