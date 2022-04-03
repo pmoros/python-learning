@@ -2,6 +2,7 @@
 # pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
 
+from tkinter.filedialog import test
 from unittest import TestCase, main
 
 from python_learning.member import Member, Gender
@@ -78,6 +79,55 @@ class TestMember(TestCase):
         member_female.set_spouse(self.member)
         member_female.add_child(child_demo_b)
         self.assertEqual(member_female.children.pop(), child_demo_b)
+
+    def test_get_paternal_grandmother(self):
+        test_member = Member(1, "Member", Gender.MALE)
+        test_member_father = Member(2, "Member", Gender.MALE)
+        test_paternal_grandmother = Member(3, "Paternal GrandMother", Gender.FEMALE)
+
+        # Error cases
+        self.assertEqual(test_member.get_paternal_grandmother(), None)
+
+        test_member.father = test_member_father
+        self.assertEqual(test_member.get_paternal_grandmother(), None)
+
+        # Success case
+        test_member_father.mother = test_paternal_grandmother
+        self.assertEqual(
+            test_member.get_paternal_grandmother(), test_paternal_grandmother
+        )
+
+    def test_get_maternal_grandmother(self):
+        test_member = Member(1, "Member", Gender.MALE)
+        test_member_mother = Member(2, "Member", Gender.MALE)
+        test_maternal_grandmother = Member(3, "Maternal GrandMother", Gender.FEMALE)
+
+        # Error cases
+        self.assertEqual(test_member.get_maternal_grandmother(), None)
+
+        test_member.mother = test_member_mother
+        self.assertEqual(test_member.get_maternal_grandmother(), None)
+
+        # Success case
+        test_member_mother.mother = test_maternal_grandmother
+        self.assertEqual(
+            test_member.get_maternal_grandmother(), test_maternal_grandmother
+        )
+
+    def test_get_spouse_mother(self):
+        test_member = Member(1, "Member", Gender.MALE)
+        test_member_spouse = Member(2, "Member", Gender.FEMALE)
+        test_spouse_mother = Member(3, "Spouse mother", Gender.FEMALE)
+
+        # Error cases
+        self.assertEqual(test_member.get_spouse_mother(), None)
+
+        test_member.spouse = test_member_spouse
+        self.assertEqual(test_member.get_spouse_mother(), None)
+
+        # Success case
+        test_member_spouse.mother = test_spouse_mother
+        self.assertEqual(test_member.get_spouse_mother(), test_spouse_mother)
 
 
 if __name__ == "__main__":
