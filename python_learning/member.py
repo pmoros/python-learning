@@ -213,3 +213,22 @@ class Member:
 
         siblings = list(filter(lambda x: x != self, self.mother.children))
         return siblings
+
+    def get_relationship(self, relationship_type):
+        relationship_methods = {
+            "paternal_aunt": self.get_paternal_aunt,
+            "paternal_uncle": self.get_paternal_uncle,
+            "maternal_aunt": self.get_maternal_aunt,
+            "maternal_uncle": self.get_maternal_uncle,
+            "brother_in_law": self.get_brother_in_law,
+            "sister_in_law": self.get_sister_in_law,
+            "son": self.get_son,
+            "daugther": self.get_daugther,
+            "sibling": self.get_siblings,
+        }
+
+        relationship_method = relationship_methods.get(relationship_type, None)
+        if not relationship_method:
+            raise KeyError
+
+        return relationship_method()

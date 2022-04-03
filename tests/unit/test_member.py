@@ -414,6 +414,58 @@ class TestMember(TestCase):
         self.member.mother.children.extend(demo_siblings)
         self.assertEqual(self.member.get_siblings(), demo_siblings)
 
+    @patch("python_learning.member.Member.get_siblings")
+    @patch("python_learning.member.Member.get_daugther")
+    @patch("python_learning.member.Member.get_son")
+    @patch("python_learning.member.Member.get_sister_in_law")
+    @patch("python_learning.member.Member.get_brother_in_law")
+    @patch("python_learning.member.Member.get_maternal_uncle")
+    @patch("python_learning.member.Member.get_maternal_aunt")
+    @patch("python_learning.member.Member.get_paternal_uncle")
+    @patch("python_learning.member.Member.get_paternal_aunt")
+    def test_get_relationship(
+        self,
+        mock_get_paternal_aunt,
+        mock_get_paternal_uncle,
+        mock_get_maternal_aunt,
+        mock_get_maternal_uncle,
+        mock_get_brother_in_law,
+        mock_get_sister_in_law,
+        mock_get_son,
+        mock_get_daugther,
+        mock_get_siblings,
+    ):
+        self.assertRaises(
+            KeyError, self.member.get_relationship, "invalid_relationship"
+        )
+
+        self.member.get_relationship("paternal_aunt")
+        mock_get_paternal_aunt.assert_called_with()
+
+        self.member.get_relationship("paternal_uncle")
+        mock_get_paternal_uncle.assert_called_with()
+
+        self.member.get_relationship("maternal_aunt")
+        mock_get_maternal_aunt.assert_called_with()
+
+        self.member.get_relationship("maternal_uncle")
+        mock_get_maternal_uncle.assert_called_with()
+
+        self.member.get_relationship("brother_in_law")
+        mock_get_brother_in_law.assert_called_with()
+
+        self.member.get_relationship("sister_in_law")
+        mock_get_sister_in_law.assert_called_with()
+
+        self.member.get_relationship("son")
+        mock_get_son.assert_called_with()
+
+        self.member.get_relationship("daugther")
+        mock_get_daugther.assert_called_with()
+
+        self.member.get_relationship("sibling")
+        mock_get_siblings.assert_called_with()
+
 
 if __name__ == "__main__":
     main()
