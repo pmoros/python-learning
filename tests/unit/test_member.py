@@ -6,28 +6,8 @@ from tkinter.filedialog import test
 from unittest import TestCase, main
 from unittest.mock import patch, Mock
 
+from tests.unit import create_fake_member
 from python_learning.member import Member, Gender
-
-
-def create_fake_member(
-    id=None,
-    name=None,
-    gender=None,
-    mother=None,
-    father=None,
-    spouse=None,
-    children=None,
-):
-    member = Mock()
-    member.id = id
-    member.name = name
-    member.gender = gender
-    member.mother = mother
-    member.father = father
-    member.spouse = spouse
-    member.children = children
-
-    return member
 
 
 class TestMember(TestCase):
@@ -41,7 +21,7 @@ class TestMember(TestCase):
         self.assertEqual(isinstance(self.member, Member), True)
 
         # Check properties
-        self.assertEqual(self.member.id, 1)
+        self.assertEqual(self.member.id_member, 1)
         self.assertEqual(self.member.name, "Zim")
         self.assertEqual(self.member.gender, Gender.MALE)
         self.assertEqual(self.member.spouse, None)
@@ -184,7 +164,7 @@ class TestMember(TestCase):
 
         paternal_aunts = self.member.get_paternal_aunt()
         self.assertEqual(len(paternal_aunts), 1)
-        self.assertEqual(paternal_aunts[0].id, 5)
+        self.assertEqual(paternal_aunts[0].id_member, 5)
         self.assertEqual(paternal_aunts[0].gender, Gender.FEMALE)
 
         # Check that mock_get_paternal_grandmother was called instead
@@ -223,7 +203,7 @@ class TestMember(TestCase):
 
         uncles = self.member.get_paternal_uncle()
         uncle = uncles[0]
-        self.assertEqual(uncle.id, 3)
+        self.assertEqual(uncle.id_member, 3)
         self.assertEqual(uncle.gender, Gender.MALE)
 
         # Check that mock_get_paternal_grandmother was called instead
@@ -260,7 +240,7 @@ class TestMember(TestCase):
 
         aunts = self.member.get_maternal_aunt()
         aunt = aunts[0]
-        self.assertEqual(aunt.id, 2)
+        self.assertEqual(aunt.id_member, 2)
 
         # Check that mock_get_paternal_grandmother was called instead
         mock_get_maternal_grandmother.assert_called_with()
@@ -296,7 +276,7 @@ class TestMember(TestCase):
 
         uncles = self.member.get_maternal_uncle()
         uncle = uncles[0]
-        self.assertEqual(uncle.id, 3)
+        self.assertEqual(uncle.id_member, 3)
 
         # Check that mock_get_paternal_grandmother was called instead
         mock_get_maternal_grandmother.assert_called_with()
@@ -333,7 +313,7 @@ class TestMember(TestCase):
 
         brothers_in_law = self.member.get_brother_in_law()
         brother_in_law = brothers_in_law[0]
-        self.assertEqual(brother_in_law.id, 3)
+        self.assertEqual(brother_in_law.id_member, 3)
 
         # Check that mock_get_spouse_mother was called instead
         mock_get_spouse_mother.assert_called_with()
@@ -368,7 +348,7 @@ class TestMember(TestCase):
 
         sisters_in_law = self.member.get_sister_in_law()
         sister_in_law = sisters_in_law[0]
-        self.assertEqual(sister_in_law.id, 2)
+        self.assertEqual(sister_in_law.id_member, 2)
 
         # Check that mock_get_spouse_mother was called instead
         mock_get_spouse_mother.assert_called_with()
@@ -465,7 +445,3 @@ class TestMember(TestCase):
 
         self.member.get_relationship("sibling")
         mock_get_siblings.assert_called_with()
-
-
-if __name__ == "__main__":
-    main()

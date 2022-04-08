@@ -21,13 +21,13 @@ class Member:
     Defines a Member.
 
     Args:
-    id: unique identifier to a member (int)
+    id_member: unique identifier to a member (int)
     name: str
     gender: Gender
     """
 
-    def __init__(self, id, name, gender):
-        self.id = id
+    def __init__(self, id_member, name, gender):
+        self.id_member = id_member
         self.name = name
         self.__set_gender(gender)
         self.mother = None
@@ -132,7 +132,9 @@ class Member:
             filter(lambda x: x.gender == Gender.MALE, grandmother_children)
         )
 
-        uncles = list(filter(lambda x: x.id != self.father.id, male_children))
+        uncles = list(
+            filter(lambda x: x.id_member != self.father.id_member, male_children)
+        )
 
         return uncles
 
@@ -147,7 +149,9 @@ class Member:
             filter(lambda x: x.gender == Gender.FEMALE, grandmother_children)
         )
 
-        aunts = list(filter(lambda x: x.id != self.mother.id, female_children))
+        aunts = list(
+            filter(lambda x: x.id_member != self.mother.id_member, female_children)
+        )
 
         return aunts
 
@@ -188,7 +192,7 @@ class Member:
         )
         if self.spouse.gender == Gender.FEMALE:
             sisters_in_law = list(
-                filter(lambda x: x.id != self.spouse.id, sisters_in_law)
+                filter(lambda x: x.id_member != self.spouse.id_member, sisters_in_law)
             )
 
         return sisters_in_law
