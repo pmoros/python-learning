@@ -25,4 +25,6 @@ class Calculator:
 
     @staticmethod
     def divide(a, b):
-        pass
+        c = a / b
+
+        return c
