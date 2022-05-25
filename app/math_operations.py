@@ -25,6 +25,10 @@ class Calculator:
 
     @staticmethod
     def divide(a, b):
-        c = a / b
+        try:
+            c = a / b
+        except ZeroDivisionError as e:
+            logger.error("Division by zero. Check the value of b.")
+            raise e
 
         return c

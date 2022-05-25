@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from app.math_operations import Calculator
 
 
@@ -18,3 +19,11 @@ class TestCalculator(unittest.TestCase):
         result = Calculator.divide(a, b)
 
         self.assertEqual(result, 1 / 2)
+
+    @patch("app.math_operations.logger.error")
+    def test_should_not_divide_by_zero(self, mock_logger):
+        a = 1
+        b = 0
+
+        self.assertRaises(ZeroDivisionError, Calculator.divide, a, b)
+        assert mock_logger.called
