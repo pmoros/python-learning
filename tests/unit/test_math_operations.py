@@ -12,7 +12,7 @@ class TestCalculator(unittest.TestCase):
 
         self.assertEqual(result, 5)
 
-    def test_should_divide_two_numbers_b_not_zero(self):
+    def test_should_divide_two_numbers(self):
         a = 1
         b = 2
 
