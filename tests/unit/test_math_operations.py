@@ -20,10 +20,10 @@ class TestCalculator(unittest.TestCase):
 
         self.assertEqual(result, 1 / 2)
 
-    @patch("app.math_operations.logger.error")
+    @patch("app.math_operations.logger.error", autospec=True)
     def test_should_not_divide_by_zero(self, mock_logger):
         a = 1
         b = 0
 
         self.assertRaises(ZeroDivisionError, Calculator.divide, a, b)
-        assert mock_logger.called
+        mock_logger.assert_called()
