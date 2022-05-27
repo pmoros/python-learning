@@ -27,3 +27,14 @@ class TestCalculator(unittest.TestCase):
 
         self.assertRaises(ZeroDivisionError, Calculator.divide, a, b)
         mock_logger.assert_called()
+
+    @patch("app.math_operations.Calculator.add")
+    def test_should_sum_range(self, mock_add):
+        mock_add.side_effect = [1, 3, 6, 10]
+        a = 1
+        b = 4
+
+        result = Calculator.sum_range(a, b)
+
+        self.assertEqual(result, 10)
+        assert 4 == mock_add.call_count

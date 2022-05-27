@@ -32,3 +32,10 @@ class Calculator:
             raise e
 
         return c
+
+    @staticmethod
+    def sum_range(a, b):
+        c = 0
+        for i in range(a, b + 1):
+            c = Calculator.add(i, c)
+        return c
