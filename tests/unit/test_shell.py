@@ -1,5 +1,3 @@
-from os import getcwd
-import os.path
 import unittest
 from unittest.mock import patch
 
@@ -7,11 +5,13 @@ from app import shell
 
 
 class TestShell(unittest.TestCase):
-    def setUp(self):
-        self.tmp_path = os.path.join(getcwd(), "test_file.txt")
-        with open(self.tmp_path, "w", encoding="utf-8") as f:
-            f.write("test line")
+    @patch("app.shell.os")
+    def test_rm(self, mock_os):
+        """
+        We have an insider, an object we can use to verify
+        the functionality of another.
+        """
+        tmp_file_path = "tmp_test.txt"
+        shell.rm(tmp_file_path)
 
-    def test_rm(self):
-        shell.rm(self.tmp_path)
-        self.assertFalse(os.path.exists(self.tmp_path))
+        mock_os.remove.assert_called_with(tmp_file_path)
