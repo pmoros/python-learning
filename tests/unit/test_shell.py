@@ -39,7 +39,7 @@ class TestRemovalService(unittest.TestCase):
 class TestUploadService(unittest.TestCase):
     @mock.patch.object(RemovalService, "rm")
     def test_should_complete_upload_file_to_filesystem(self, mock_rm):
-        """Mock out the RemovalService.rm method itself."""
+        """1) Mock out the RemovalService.rm method itself."""
         removal_service = RemovalService()
         upload_service = UploadService(removal_service)
 
@@ -51,3 +51,13 @@ class TestUploadService(unittest.TestCase):
 
         # Check that it called the method of our removal_service
         removal_service.rm.assert_called_with(tmp_file_path)
+
+    def test_should_upload_file_to_filesystem(self):
+        """2) Supply a mocked instance of RemovalService."""
+        tmp_file_path = "tmp_test.txt"
+        mock_removal_service = mock.create_autospec(RemovalService)
+        upload_service = UploadService(mock_removal_service)
+
+        upload_service.upload_complete(tmp_file_path)
+
+        mock_removal_service.rm.assert_called_with(tmp_file_path)
