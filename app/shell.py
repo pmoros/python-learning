@@ -1,5 +1,7 @@
 import os
+import os.path
 
 
 def rm(file):
-    os.remove(file)
+    if os.path.isfile(file):
+        os.remove(file)
