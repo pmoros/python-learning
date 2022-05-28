@@ -2,6 +2,9 @@ import os
 import os.path
 
 
-def rm(file):
-    if os.path.isfile(file):
-        os.remove(file)
+class RemovalService:
+    """A service for removing files from filesystem."""
+
+    def rm(self, file):
+        if os.path.isfile(file):
+            os.remove(file)
