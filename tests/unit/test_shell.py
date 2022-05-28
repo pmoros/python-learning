@@ -39,6 +39,7 @@ class TestRemovalService(unittest.TestCase):
 class TestUploadService(unittest.TestCase):
     @mock.patch.object(RemovalService, "rm")
     def test_should_complete_upload_file_to_filesystem(self, mock_rm):
+        """Mock out the RemovalService.rm method itself."""
         removal_service = RemovalService()
         upload_service = UploadService(removal_service)
 
