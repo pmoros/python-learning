@@ -1,12 +1,12 @@
-import unittest
-import unittest.mock as mock
+from unittest import TestCase
+from unittest import mock
 
 from app.shell import RemovalService, UploadService
 
 
 @mock.patch("app.shell.os.path")
 @mock.patch("app.shell.os")
-class TestRemovalService(unittest.TestCase):
+class TestRemovalService(TestCase):
     @classmethod
     def setUpClass(self):
         self.removal_service = RemovalService()
@@ -36,7 +36,7 @@ class TestRemovalService(unittest.TestCase):
         mock_os.remove.assert_not_called()
 
 
-class TestUploadService(unittest.TestCase):
+class TestUploadService(TestCase):
     @mock.patch.object(RemovalService, "rm")
     def test_should_complete_upload_file_to_filesystem(self, mock_rm):
         """1) Mock out the RemovalService.rm method itself."""

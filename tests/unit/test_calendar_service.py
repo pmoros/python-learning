@@ -1,9 +1,9 @@
-import unittest
-import unittest.mock as mock
+from unittest import TestCase
+from unittest import mock
 from app.services import calendar_service
 
 
-class TestCalendarService(unittest.TestCase):
+class TestCalendarService(TestCase):
     def setUp(self):
         self.tuesday = 2
         self.sunday = 7

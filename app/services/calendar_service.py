@@ -1,5 +1,5 @@
-import requests
 from datetime import datetime
+import requests
 
 
 def is_weekday():
