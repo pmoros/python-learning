@@ -1,12 +1,12 @@
 import unittest
-from unittest.mock import patch
+import unittest.mock as mock
 
-from app.shell import RemovalService
+from app.shell import RemovalService, UploadService
 
 
-@patch("app.shell.os.path")
-@patch("app.shell.os")
-class TestShell(unittest.TestCase):
+@mock.patch("app.shell.os.path")
+@mock.patch("app.shell.os")
+class TestRemovalService(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.removal_service = RemovalService()
@@ -34,3 +34,19 @@ class TestShell(unittest.TestCase):
         self.removal_service.rm(tmp_invalid_file_path)
 
         mock_os.remove.assert_not_called()
+
+
+class TestUploadService(unittest.TestCase):
+    @mock.patch.object(RemovalService, "rm")
+    def test_should_complete_upload_file_to_filesystem(self, mock_rm):
+        removal_service = RemovalService()
+        upload_service = UploadService(removal_service)
+
+        tmp_file_path = "tmp_test.txt"
+        upload_service.upload_complete(tmp_file_path)
+
+        # Check that it called the rm method of any RemovalService
+        mock_rm.assert_called_with(tmp_file_path)
+
+        # Check that it called the method of our removal_service
+        removal_service.rm.assert_called_with(tmp_file_path)
