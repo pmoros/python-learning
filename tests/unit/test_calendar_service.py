@@ -22,3 +22,12 @@ class TestCalendarService(unittest.TestCase):
         mock_datetime.today.return_value = self.mock_weekday
 
         self.assertFalse(calendar_service.is_weekday())
+
+    @mock.patch(
+        "app.services.calendar_service.requests.get",
+        side_effect=TimeoutError,
+        autospec=True,
+    )
+    def test_should_get_holidays_raise_timeout(self, mock_requests_get):
+        with self.assertRaises(TimeoutError):
+            calendar_service.get_holidays()
